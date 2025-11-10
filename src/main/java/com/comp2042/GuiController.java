@@ -10,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -22,7 +23,7 @@ import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
+import javafx.beans.binding.Bindings;
 public class GuiController implements Initializable {
 
     private static final int BRICK_SIZE = 20;
@@ -35,6 +36,9 @@ public class GuiController implements Initializable {
 
     @FXML
     private GridPane brickPanel;
+
+    @FXML
+    private Label scoreLabel;
 
     @FXML
     private GameOverPanel gameOverPanel;
@@ -201,6 +205,7 @@ public class GuiController implements Initializable {
     }
 
     public void bindScore(IntegerProperty integerProperty) {
+        scoreLabel.textProperty().bind(integerProperty.asString());
     }
 
     public void gameOver() {
