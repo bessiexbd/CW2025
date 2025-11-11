@@ -11,11 +11,17 @@
        prefWidth="500" prefHeight="580" spacing="50">
 
     <!-- Score box on the left side -->
+    <VBox id="rightPane">
     <VBox styleClass="scoreBox" layoutX="5" layoutY="50" maxWidth="100" maxHeight="120" alignment="CENTER">
         <Label text="SCORE" styleClass="scoreTitle"/>
         <Label fx:id="scoreLabel" text="0" styleClass="scoreClass"/>
     </VBox>
 
+    <VBox styleClass="lineBox" layoutX="5" layoutY="80" maxWidth="100" maxHeight="120" alignment="CENTER">
+        <Label text="Line" styleClass="lineTitle"/>
+        <Label fx:id="lineLabel" text="0" styleClass="lineClass"/>
+    </VBox>
+    </VBox>
 
     <Pane>
 

@@ -41,6 +41,9 @@ public class GuiController implements Initializable {
     private Label scoreLabel;
 
     @FXML
+    private Label lineLabel;
+
+    @FXML
     private GameOverPanel gameOverPanel;
 
     private Rectangle[][] displayMatrix;
@@ -207,6 +210,10 @@ public class GuiController implements Initializable {
     public void bindScore(IntegerProperty integerProperty) {
         scoreLabel.textProperty().bind(integerProperty.asString());
     }
+    public void bindLine(IntegerProperty integerProperty) {
+        lineLabel.textProperty().bind(integerProperty.asString());
+    }
+
 
     public void gameOver() {
         timeLine.stop();
