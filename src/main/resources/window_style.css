@@ -20,7 +20,7 @@
     -fx-border-radius: 10px;
     -fx-background-color: rgba(0, 0, 0, 0.5);
     -fx-background-radius: 10px;
-    -fx-min-width: 100;
+    -fx-min-width: 150;
     -fx-min-height: 70;
     -fx-alignment: center;
     -fx-padding: 15px;
@@ -47,12 +47,6 @@
     -fx-padding: 15px;
 }
 
-.lineBox {
-    -fx-min-width: 100;
-    -fx-min-height: 70;
-    -fx-padding: 15px;
-    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 15, 0.3, 0, 0);
-}
 
 .lineTitle {
     -fx-font-family: "Let's go Digital";
@@ -62,6 +56,23 @@
 }
 
 #lineLabel {
+    -fx-font-family: "Let's go Digital";
+    -fx-font-size: 38px;
+    -fx-text-fill: yellow;
+
+}.levelBox {
+     -fx-min-width: 60;
+     -fx-min-height: 70;
+     -fx-alignment: center;
+     -fx-padding: 15px;
+ }
+.levelTitle {
+    -fx-font-family: "Let's go Digital";
+    -fx-font-size: 20;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+#levelLabel {
     -fx-font-family: "Let's go Digital";
     -fx-font-size: 38px;
     -fx-text-fill: yellow;

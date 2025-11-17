@@ -11,7 +11,8 @@ public class GameController implements InputEventListener {
 
     private final GuiController viewGuiController;
     private IntegerProperty lines = new SimpleIntegerProperty(0);
-    private int level = 1;
+    //    make level an integer property for binding
+    private IntegerProperty level = new SimpleIntegerProperty(1);
 
     public GameController(GuiController c) {
         viewGuiController = c;
@@ -20,7 +21,9 @@ public class GameController implements InputEventListener {
         viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData());
         viewGuiController.bindScore(board.getScore().scoreProperty());
         viewGuiController.bindLine(lines);
+        viewGuiController.bindLevel(level);
     }
+
 
     @Override
     public DownData onDownEvent(MoveEvent event) {
@@ -32,6 +35,8 @@ public class GameController implements InputEventListener {
             if (clearRow.getLinesRemoved() > 0) {
                 board.getScore().add(clearRow.getScoreBonus());
                 lines.setValue(lines.getValue() + clearRow.getLinesRemoved());
+//update the value
+                updateLevel(lines.getValue());
             }
             if (board.createNewBrick()) {
                 viewGuiController.gameOver();
@@ -65,13 +70,25 @@ public class GameController implements InputEventListener {
         return board.getViewData();
     }
 
-    public void ChangeLevel(int lines){
-        level = lines / 5;
+    public void updateLevel(int lines){
+//        update the level according to the lines
+        int newLevel = 1 + lines / 5;
+//      only update if level actually changed
+        if(newLevel != level.getValue() && newLevel != 12){
+            level.setValue(newLevel);
+            viewGuiController.updateGameSpeed(400 - (30 * newLevel-1));
+            System.out.print(400 - (30 * newLevel-1));
+        }
     }
 
     @Override
     public void createNewGame() {
         board.newGame();
+
+//        reset lines and level when starting a new game
+        lines .setValue(0);
+        level.setValue(1);
+
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
     }
 }

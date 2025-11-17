@@ -43,6 +43,10 @@ public class GuiController implements Initializable {
     @FXML
     private Label lineLabel;
 
+//add the label in the FXML file
+    @FXML
+    private Label levelLabel;
+
     @FXML
     private GameOverPanel gameOverPanel;
 
@@ -213,7 +217,27 @@ public class GuiController implements Initializable {
     public void bindLine(IntegerProperty integerProperty) {
         lineLabel.textProperty().bind(integerProperty.asString());
     }
+//bind level label
+    public void bindLevel(IntegerProperty levelProperty){
+        levelLabel.textProperty().bind(levelProperty.asString());
+    }
 
+    public void updateGameSpeed(double newDurationMillis) {
+        if (timeLine != null) {
+            timeLine.stop();
+
+            KeyFrame newKeyFrame = new KeyFrame(
+                    Duration.millis(newDurationMillis),
+                    ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
+            );
+            timeLine = new Timeline(newKeyFrame);
+            timeLine.setCycleCount(Timeline.INDEFINITE);
+            // Only play if game is active
+            if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
+                timeLine.play();
+            }
+        }
+    }
 
     public void gameOver() {
         timeLine.stop();
@@ -230,7 +254,6 @@ public class GuiController implements Initializable {
         isPause.setValue(Boolean.FALSE);
         isGameOver.setValue(Boolean.FALSE);
     }
-
     public void pauseGame(ActionEvent actionEvent) {
         gamePanel.requestFocus();
     }

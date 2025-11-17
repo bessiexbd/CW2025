@@ -21,6 +21,11 @@
         <Label text="Line" styleClass="lineTitle"/>
         <Label fx:id="lineLabel" text="0" styleClass="lineClass"/>
     </VBox>
+
+        <VBox   styleClass="levelBox" layoutX="5" layoutY="80" maxWidth="100" maxHeight="120" alignment="CENTER">
+        <Label text="Level" styleClass="levelTitle"/>
+        <Label fx:id="levelLabel" text="0" styleClass="levelClass"/>
+    </VBox>
     </VBox>
 
     <Pane>
