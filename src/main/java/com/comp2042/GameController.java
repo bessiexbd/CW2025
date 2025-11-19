@@ -41,7 +41,6 @@ public class GameController implements InputEventListener {
             if (board.createNewBrick()) {
                 viewGuiController.gameOver();
             }
-
             viewGuiController.refreshGameBackground(board.getBoardMatrix());
 
         } else {

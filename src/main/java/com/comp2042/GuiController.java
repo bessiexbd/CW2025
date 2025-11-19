@@ -20,10 +20,11 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.beans.binding.Bindings;
 public class GuiController implements Initializable {
 
     private static final int BRICK_SIZE = 20;
@@ -43,7 +44,7 @@ public class GuiController implements Initializable {
     @FXML
     private Label lineLabel;
 
-//add the label in the FXML file
+    //add the label in the FXML file
     @FXML
     private Label levelLabel;
 
@@ -62,9 +63,24 @@ public class GuiController implements Initializable {
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
+    private MediaPlayer bgmPlayer;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
+//        initialize background music
+        try {
+            Media bgm = new Media(getClass().getResource("/bgm.mp3").toString());
+            bgmPlayer = new MediaPlayer(bgm);
+            bgmPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+//set volume
+            bgmPlayer.setVolume(1.0);
+            bgmPlayer.play();
+        } catch (Exception e) {
+            System.err.println("Error loading background music: " + e.getMessage());
+            e.printStackTrace();
+        }
+
         gamePanel.setFocusTraversable(true);
         gamePanel.requestFocus();
         gamePanel.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -90,6 +106,10 @@ public class GuiController implements Initializable {
                 }
                 if (keyEvent.getCode() == KeyCode.N) {
                     newGame(null);
+                }
+
+                if (keyEvent.getCode() == KeyCode.P || keyEvent.getCode() == KeyCode.ESCAPE) {
+                    pauseGame(null);
                 }
             }
         });
@@ -140,25 +160,25 @@ public class GuiController implements Initializable {
                 returnPaint = Color.TRANSPARENT;
                 break;
             case 1:
-                returnPaint = Color.AQUA;
+                returnPaint = Color.web("bde0fe");
                 break;
             case 2:
-                returnPaint = Color.BLUEVIOLET;
+                returnPaint = Color.web("ffc8dd");
                 break;
             case 3:
-                returnPaint = Color.DARKGREEN;
+                returnPaint = Color.web("d9ed92");
                 break;
             case 4:
-                returnPaint = Color.YELLOW;
+                returnPaint = Color.web("fff3b0");
                 break;
             case 5:
-                returnPaint = Color.RED;
+                returnPaint = Color.web("ffadad");
                 break;
             case 6:
-                returnPaint = Color.BEIGE;
+                returnPaint = Color.web("ffc6ff");
                 break;
             case 7:
-                returnPaint = Color.BURLYWOOD;
+                returnPaint = Color.web("ffd6a5");
                 break;
             default:
                 returnPaint = Color.WHITE;
@@ -214,11 +234,13 @@ public class GuiController implements Initializable {
     public void bindScore(IntegerProperty integerProperty) {
         scoreLabel.textProperty().bind(integerProperty.asString());
     }
+
     public void bindLine(IntegerProperty integerProperty) {
         lineLabel.textProperty().bind(integerProperty.asString());
     }
-//bind level label
-    public void bindLevel(IntegerProperty levelProperty){
+
+    //bind level label
+    public void bindLevel(IntegerProperty levelProperty) {
         levelLabel.textProperty().bind(levelProperty.asString());
     }
 
@@ -253,8 +275,20 @@ public class GuiController implements Initializable {
         timeLine.play();
         isPause.setValue(Boolean.FALSE);
         isGameOver.setValue(Boolean.FALSE);
+
+        // ensure music is playing when a new game starts
+        if (bgmPlayer != null && bgmPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
+            bgmPlayer.play();
+        }
     }
+
     public void pauseGame(ActionEvent actionEvent) {
         gamePanel.requestFocus();
+//        pause music when game is paused
+        if (bgmPlayer != null && isPause.getValue() == Boolean.FALSE) {
+            bgmPlayer.pause();
+        } else if (bgmPlayer != null) {
+            bgmPlayer.play();
+        }
     }
 }

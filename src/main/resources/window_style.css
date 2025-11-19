@@ -9,9 +9,8 @@
 }
 
 .gameBoard {
-    -fx-border-color: linear-gradient(#2A5058, #61a2b1);
+    -fx-border-color:#ede0d4 ;
     -fx-border-width: 12px;
-    -fx-border-radius: 12px;
 }
 /* Score box style */
 .scoreBox {
