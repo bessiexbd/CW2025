@@ -100,6 +100,10 @@ public class SimpleBoard implements Board {
     }
 
     @Override
+    public ViewData getNextBrickViewData(){
+        return new ViewData(brickGenerator.getNextBrick().getShapeMatrix().get(0),0,0,brickGenerator.getNextBrick().getShapeMatrix().get(0));
+    }
+    @Override
     public void mergeBrickToBackground() {
         currentGameMatrix = MatrixOperations.merge(currentGameMatrix, brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }

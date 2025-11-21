@@ -22,6 +22,11 @@ public class GameController implements InputEventListener {
         viewGuiController.bindScore(board.getScore().scoreProperty());
         viewGuiController.bindLine(lines);
         viewGuiController.bindLevel(level);
+//        update the next brick preview
+        updateNextBrickPreview();
+    }
+    private void updateNextBrickPreview() {
+        viewGuiController.updateNextBrick(board.getNextBrickViewData());
     }
 
 
@@ -42,6 +47,7 @@ public class GameController implements InputEventListener {
                 viewGuiController.gameOver();
             }
             viewGuiController.refreshGameBackground(board.getBoardMatrix());
+            updateNextBrickPreview();
 
         } else {
             if (event.getEventSource() == EventSource.USER) {
@@ -89,5 +95,7 @@ public class GameController implements InputEventListener {
         level.setValue(1);
 
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
+//        update next brick for new game
+        updateNextBrickPreview();
     }
 }

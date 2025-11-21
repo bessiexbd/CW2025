@@ -24,7 +24,12 @@
 
         <VBox   styleClass="levelBox" layoutX="5" layoutY="80" maxWidth="100" maxHeight="120" alignment="CENTER">
         <Label text="Level" styleClass="levelTitle"/>
-        <Label fx:id="levelLabel" text="0" styleClass="levelClass"/>
+        <Label fx:id="levelLabel" text="1" styleClass="levelClass"/>
+    </VBox>
+
+    <VBox styleClass="nextBrickBox"  alignment="CENTER" maxWidth="100" maxHeight="120" >
+        <Label text="NEXT" styleClass="nextBrickLabel"/>
+        <GridPane fx:id="nextBrickPanel" hgap="1" vgap="1" styleClass="nextBox"/>
     </VBox>
     </VBox>
 
