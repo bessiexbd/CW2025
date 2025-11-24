@@ -10,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Group;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
@@ -47,6 +48,9 @@ public class GuiController implements Initializable {
     //add the label in the FXML file
     @FXML
     private Label levelLabel;
+
+    @FXML
+    private Button pauseButton;
 
     @FXML
     private GameOverPanel gameOverPanel;
@@ -109,6 +113,17 @@ public class GuiController implements Initializable {
                         keyEvent.consume();
                     }
                 }
+//hard drop with space
+                if (keyEvent.getCode() == KeyCode.SPACE) {
+                    DownData downData = eventListener.onHardDropEvent(new MoveEvent(EventType.HARD_DROP, EventSource.USER));
+                    if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
+                        NotificationPanel notificationPanel = new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
+                        groupNotification.getChildren().add(notificationPanel);
+                        notificationPanel.showScore(groupNotification.getChildren());
+                    }
+                    refreshBrick(downData.getViewData());
+                    keyEvent.consume();
+                }
                 if (keyEvent.getCode() == KeyCode.N) {
                     newGame(null);
                 }
@@ -158,6 +173,7 @@ public class GuiController implements Initializable {
         timeLine.setCycleCount(Timeline.INDEFINITE);
         timeLine.play();
     }
+
     private void initNextBrickPanel() {
 //        create a 4*4 grid for the next brick
         nextBrickRectangles = new Rectangle[4][4];
@@ -195,142 +211,156 @@ public class GuiController implements Initializable {
         }
     }
 
-            private Paint getFillColor ( int i){
-                Paint returnPaint;
-                switch (i) {
-                    case 0:
-                        returnPaint = Color.TRANSPARENT;
-                        break;
-                    case 1:
-                        returnPaint = Color.web("bde0fe");
-                        break;
-                    case 2:
-                        returnPaint = Color.web("ffc8dd");
-                        break;
-                    case 3:
-                        returnPaint = Color.web("d9ed92");
-                        break;
-                    case 4:
-                        returnPaint = Color.web("fff3b0");
-                        break;
-                    case 5:
-                        returnPaint = Color.web("ffadad");
-                        break;
-                    case 6:
-                        returnPaint = Color.web("ffc6ff");
-                        break;
-                    case 7:
-                        returnPaint = Color.web("ffd6a5");
-                        break;
-                    default:
-                        returnPaint = Color.WHITE;
-                        break;
-                }
-                return returnPaint;
-            }
+    private Paint getFillColor(int i) {
+        Paint returnPaint;
+        switch (i) {
+            case 0:
+                returnPaint = Color.TRANSPARENT;
+                break;
+            case 1:
+                returnPaint = Color.web("bde0fe");
+                break;
+            case 2:
+                returnPaint = Color.web("ffc8dd");
+                break;
+            case 3:
+                returnPaint = Color.web("d9ed92");
+                break;
+            case 4:
+                returnPaint = Color.web("fff3b0");
+                break;
+            case 5:
+                returnPaint = Color.web("ffadad");
+                break;
+            case 6:
+                returnPaint = Color.web("ffc6ff");
+                break;
+            case 7:
+                returnPaint = Color.web("ffd6a5");
+                break;
+            default:
+                returnPaint = Color.WHITE;
+                break;
+        }
+        return returnPaint;
+    }
 
 
-            private void refreshBrick (ViewData brick){
-                if (isPause.getValue() == Boolean.FALSE) {
-                    brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
-                    brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
-                    for (int i = 0; i < brick.getBrickData().length; i++) {
-                        for (int j = 0; j < brick.getBrickData()[i].length; j++) {
-                            setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);
-                        }
-                    }
-                }
-            }
-
-            public void refreshGameBackground ( int[][] board){
-                for (int i = 2; i < board.length; i++) {
-                    for (int j = 0; j < board[i].length; j++) {
-                        setRectangleData(board[i][j], displayMatrix[i][j]);
-                    }
-                }
-            }
-
-            private void setRectangleData ( int color, Rectangle rectangle){
-                rectangle.setFill(getFillColor(color));
-                rectangle.setArcHeight(9);
-                rectangle.setArcWidth(9);
-            }
-
-            private void moveDown (MoveEvent event){
-                if (isPause.getValue() == Boolean.FALSE) {
-                    DownData downData = eventListener.onDownEvent(event);
-                    if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
-                        NotificationPanel notificationPanel = new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
-                        groupNotification.getChildren().add(notificationPanel);
-                        notificationPanel.showScore(groupNotification.getChildren());
-                    }
-                    refreshBrick(downData.getViewData());
-                }
-                gamePanel.requestFocus();
-            }
-
-            public void setEventListener (InputEventListener eventListener){
-                this.eventListener = eventListener;
-            }
-
-            public void bindScore (IntegerProperty integerProperty){
-                scoreLabel.textProperty().bind(integerProperty.asString());
-            }
-
-            public void bindLine (IntegerProperty integerProperty){
-                lineLabel.textProperty().bind(integerProperty.asString());
-            }
-
-            //bind level label
-            public void bindLevel (IntegerProperty levelProperty){
-                levelLabel.textProperty().bind(levelProperty.asString());
-            }
-
-            public void updateGameSpeed ( double newDurationMillis){
-                if (timeLine != null) {
-                    timeLine.stop();
-
-                    KeyFrame newKeyFrame = new KeyFrame(
-                            Duration.millis(newDurationMillis),
-                            ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
-                    );
-                    timeLine = new Timeline(newKeyFrame);
-                    timeLine.setCycleCount(Timeline.INDEFINITE);
-                    // Only play if game is active
-                    if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
-                        timeLine.play();
-                    }
-                }
-            }
-
-            public void gameOver () {
-                timeLine.stop();
-                gameOverPanel.setVisible(true);
-                isGameOver.setValue(Boolean.TRUE);
-            }
-
-            public void newGame (ActionEvent actionEvent){
-                timeLine.stop();
-                gameOverPanel.setVisible(false);
-                eventListener.createNewGame();
-                gamePanel.requestFocus();
-                timeLine.play();
-                isPause.setValue(Boolean.FALSE);
-                isGameOver.setValue(Boolean.FALSE);
-
-                // ensure music is playing when a new game starts
-                if (bgmPlayer != null && bgmPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
-                    bgmPlayer.play();
-                }
-            }
-
-            public void pauseGame (ActionEvent actionEvent){
-                gamePanel.requestFocus();
-//        pause music when game is paused
-                if (bgmPlayer != null && isPause.getValue() == Boolean.FALSE) {
-                    bgmPlayer.pause();
-                } else if (bgmPlayer != null) {
-                    bgmPlayer.play();
+    private void refreshBrick(ViewData brick) {
+        if (isPause.getValue() == Boolean.FALSE) {
+            brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
+            brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
+            for (int i = 0; i < brick.getBrickData().length; i++) {
+                for (int j = 0; j < brick.getBrickData()[i].length; j++) {
+                    setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);
                 }
             }
         }
+    }
+
+    public void refreshGameBackground(int[][] board) {
+        for (int i = 2; i < board.length; i++) {
+            for (int j = 0; j < board[i].length; j++) {
+                setRectangleData(board[i][j], displayMatrix[i][j]);
+            }
+        }
+    }
+
+    private void setRectangleData(int color, Rectangle rectangle) {
+        rectangle.setFill(getFillColor(color));
+        rectangle.setArcHeight(9);
+        rectangle.setArcWidth(9);
+    }
+
+    private void moveDown(MoveEvent event) {
+        if (isPause.getValue() == Boolean.FALSE) {
+            DownData downData = eventListener.onDownEvent(event);
+            if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
+                NotificationPanel notificationPanel = new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
+                groupNotification.getChildren().add(notificationPanel);
+                notificationPanel.showScore(groupNotification.getChildren());
+            }
+            refreshBrick(downData.getViewData());
+        }
+        gamePanel.requestFocus();
+    }
+
+    public void setEventListener(InputEventListener eventListener) {
+        this.eventListener = eventListener;
+    }
+
+    public void bindScore(IntegerProperty integerProperty) {
+        scoreLabel.textProperty().bind(integerProperty.asString());
+    }
+
+    public void bindLine(IntegerProperty integerProperty) {
+        lineLabel.textProperty().bind(integerProperty.asString());
+    }
+
+    //bind level label
+    public void bindLevel(IntegerProperty levelProperty) {
+        levelLabel.textProperty().bind(levelProperty.asString());
+    }
+
+    public void updateGameSpeed(double newDurationMillis) {
+        if (timeLine != null) {
+            timeLine.stop();
+
+            KeyFrame newKeyFrame = new KeyFrame(
+                    Duration.millis(newDurationMillis),
+                    ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
+            );
+            timeLine = new Timeline(newKeyFrame);
+            timeLine.setCycleCount(Timeline.INDEFINITE);
+            // Only play if game is active
+            if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
+                timeLine.play();
+            }
+        }
+    }
+
+    public void gameOver() {
+        timeLine.stop();
+        gameOverPanel.setVisible(true);
+        isGameOver.setValue(Boolean.TRUE);
+    }
+
+    public void newGame(ActionEvent actionEvent) {
+        timeLine.stop();
+        gameOverPanel.setVisible(false);
+        eventListener.createNewGame();
+        gamePanel.requestFocus();
+        timeLine.play();
+        isPause.setValue(Boolean.FALSE);
+        isGameOver.setValue(Boolean.FALSE);
+
+        // ensure music is playing when a new game starts
+        if (bgmPlayer != null && bgmPlayer.getStatus() != MediaPlayer.Status.PLAYING) {
+            bgmPlayer.play();
+        }
+    }
+
+    public void pauseGame(ActionEvent actionEvent) {
+        gamePanel.requestFocus();
+
+        if (isPause.getValue()) {
+//resume the falling animation
+            if (timeLine != null) {
+                timeLine.play();
+            }
+//            resume bgm
+            if (bgmPlayer != null) {
+                bgmPlayer.play();
+            }
+        } else {
+//pause the falling animation
+            isPause.setValue(Boolean.TRUE);
+            if (timeLine != null) {
+                timeLine.pause();
+            }
+            if (bgmPlayer != null) {
+                bgmPlayer.pause();
+            }
+        }
+    }
+}
