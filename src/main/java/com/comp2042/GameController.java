@@ -54,7 +54,7 @@ public class GameController implements InputEventListener {
                 board.getScore().add(1);
             }
         }
-        return new DownData(clearRow, board.getViewData());
+        return new DownData(clearRow, board.getViewData(),0,event.getEventSource() == EventSource.USER);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class GameController implements InputEventListener {
         }
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
         updateNextBrickPreview();
-        return new DownData(clearRow, board.getViewData());
+        return new DownData(clearRow, board.getViewData() ,dropCount,event.getEventSource() == EventSource.USER);
     }
     @Override
     public ViewData onLeftEvent(MoveEvent event) {
@@ -94,6 +94,50 @@ public class GameController implements InputEventListener {
     public ViewData onRotateEvent(MoveEvent event) {
         board.rotateLeftBrick();
         return board.getViewData();
+    }
+
+    @Override
+    public ViewData getGhostPosition(ViewData currentBrick) {
+
+        int originalY = currentBrick.getyPosition();
+        int originalX = currentBrick.getxPosition();
+        int[][] originalData = currentBrick.getBrickData();
+        int[][] nextBrickData = currentBrick.getNextBrickData();
+        int ghostY = originalY;
+        int[][] boardMatrix = board.getBoardMatrix();
+
+        while (canPlaceBrick(originalX, ghostY + 1, originalData, boardMatrix)) {
+            ghostY++;
+        }
+
+        return new ViewData(
+                originalData,      // brickData
+                originalX,         // xPosition
+                ghostY,            // yPosition
+                nextBrickData      // next brick preview
+        );
+    }
+    private boolean canPlaceBrick(int x, int y, int[][] brickData, int[][] boardMatrix) {
+        for (int i = 0; i < brickData.length; i++) {
+            for (int j = 0; j < brickData[i].length; j++) {
+                if (brickData[i][j] != 0) {
+                    int boardY = y + i;
+                    int boardX = x + j;
+
+                    // Check boundaries
+                    if (boardY < 0 || boardY >= boardMatrix.length ||
+                            boardX < 0 || boardX >= boardMatrix[0].length) {
+                        return false;
+                    }
+
+                    // Check collision with existing blocks
+                    if (boardMatrix[boardY][boardX] != 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public void updateLevel(int lines){
