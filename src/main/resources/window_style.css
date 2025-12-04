@@ -76,7 +76,23 @@
     -fx-font-size: 38px;
     -fx-text-fill: yellow;
 }
+/*hold box*/
+.holdBox {
+    -fx-alignment: center;
+}
 
+.holdLabel {
+    -fx-font-family: "Let's go Digital";
+    -fx-padding: 20px 0 0 0;
+    -fx-font-size: 16px;
+    -fx-text-fill: yellow;
+}
+.holdPanelBox {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-background-radius: 10;
+    -fx-padding: 10;
+    -fx-spacing: 5;
+}
 .nextBrickLabel {
     -fx-font-family: "Let's go Digital";
     -fx-padding: 20px 0 0 0;

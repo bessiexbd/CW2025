@@ -15,4 +15,6 @@ public interface InputEventListener {
     void createNewGame();
 
     ViewData getGhostPosition(ViewData currentBrick);
+
+    ViewData onHoldEvent();
 }

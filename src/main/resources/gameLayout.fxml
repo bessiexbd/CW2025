@@ -12,9 +12,9 @@
 
 <HBox  fx:controller="com.comp2042.GuiController"
        xmlns:fx="http://javafx.com/fxml"
-       prefWidth="500" prefHeight="580" spacing="50">
+       prefWidth="500" prefHeight="580" spacing="50" >
 
-    <!-- Score box on the left side -->
+<!--left side panel-->
     <VBox id="rightPane">
     <VBox styleClass="scoreBox" layoutX="5" layoutY="50" maxWidth="100" maxHeight="120" alignment="CENTER">
         <Label text="SCORE" styleClass="scoreTitle"/>
@@ -31,6 +31,11 @@
         <Label fx:id="levelLabel" text="1" styleClass="levelClass"/>
     </VBox>
 
+        <VBox styleClass="holdBox" alignment="CENTER" maxWidth="100" maxHeight="120">
+            <Label text="HOLD" styleClass="holdLabel"/>
+            <GridPane fx:id="holdBrickPanel" hgap="1" vgap="1" styleClass="holdPanelBox"/>
+        </VBox>
+
     <VBox styleClass="nextBrickBox"  alignment="CENTER" maxWidth="100" maxHeight="120" >
         <Label text="NEXT" styleClass="nextBrickLabel"/>
         <GridPane fx:id="nextBrickPanel" hgap="1" vgap="1" styleClass="nextBox"/>
@@ -44,7 +49,7 @@
             </graphic>
         </Button>
     </VBox>
-
+    <StackPane>
 
     <Pane>
 
@@ -62,6 +67,10 @@
         </Group>
 
     </Pane>
+    <StackPane fx:id="pauseOverlay" alignment="CENTER" mouseTransparent="true">
+    </StackPane>
+</StackPane>
+
 
     <stylesheets>
         <URL value="@window_style.css"/>

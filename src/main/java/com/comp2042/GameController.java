@@ -1,5 +1,6 @@
 package com.comp2042;
 
+import com.comp2042.logic.bricks.Brick;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
@@ -13,6 +14,10 @@ public class GameController implements InputEventListener {
     private IntegerProperty lines = new SimpleIntegerProperty(0);
     //    make level an integer property for binding
     private IntegerProperty level = new SimpleIntegerProperty(1);
+
+//hold feature
+    private Brick holdBrick = null;
+    private boolean hasUsedHold = false;
 
     public GameController(GuiController c) {
         viewGuiController = c;
@@ -43,6 +48,9 @@ public class GameController implements InputEventListener {
 //update the value
                 updateLevel(lines.getValue());
             }
+
+            hasUsedHold = false;
+
             if (board.createNewBrick()) {
                 viewGuiController.gameOver();
             }
@@ -71,6 +79,9 @@ public class GameController implements InputEventListener {
             lines.setValue(lines.getValue() + clearRow.getLinesRemoved());
             updateLevel(lines.getValue());
         }
+//        reset hold when new piece spawns
+        hasUsedHold = false;
+
         if (board.createNewBrick()) {
             viewGuiController.gameOver();
         }
@@ -152,9 +163,57 @@ public class GameController implements InputEventListener {
     }
 
     @Override
+    public ViewData onHoldEvent() {
+        // Prevent using hold multiple times for the same piece
+        if (hasUsedHold) {
+            return null;
+        }
+
+        Brick currentBrick = board.getCurrentBrick();
+
+        if (holdBrick == null) {
+            // First time holding - store current brick and spawn new one
+            holdBrick = currentBrick;
+            hasUsedHold = true;
+
+            if (board.createNewBrick()) {
+                viewGuiController.gameOver();
+                return null;
+            }
+
+            // Update hold display with the brick we just stored
+            viewGuiController.updateHoldBrick(new ViewData(
+                    holdBrick.getShapeMatrix().get(0), 0, 0,
+                    holdBrick.getShapeMatrix().get(0)
+            ));
+            updateNextBrickPreview();
+
+        } else {
+            // Swap current brick with held brick
+            Brick temp = holdBrick;
+            holdBrick = currentBrick;
+            hasUsedHold = true;
+
+            board.swapWithHeldBrick(temp);
+
+
+            // Update hold display with the new brick we just stored
+            viewGuiController.updateHoldBrick(new ViewData(
+                    holdBrick.getShapeMatrix().get(0), 0, 0,
+                    holdBrick.getShapeMatrix().get(0)
+            ));
+        }
+
+        return board.getViewData();
+    }
+
+    @Override
     public void createNewGame() {
         board.newGame();
 
+//        reset hold feature
+        holdBrick = null;
+        hasUsedHold = false;
 //        reset lines and level when starting a new game
         lines .setValue(0);
         level.setValue(1);
@@ -162,5 +221,6 @@ public class GameController implements InputEventListener {
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
 //        update next brick for new game
         updateNextBrickPreview();
+        viewGuiController.updateHoldBrick(null);
     }
 }
