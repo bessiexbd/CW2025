@@ -23,4 +23,11 @@ public final class ClearRow {
     public int getScoreBonus() {
         return scoreBonus;
     }
+    public int getCleared(){
+        return linesRemoved;
+    }
+    public int[][]  getMatrix(){
+        return getNewMatrix();
+    }
+
 }

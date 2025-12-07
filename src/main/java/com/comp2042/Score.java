@@ -11,6 +11,8 @@ public final class Score {
         return score;
     }
 
+    public int getScore() { return score.get(); }
+
     public void add(int i){
         score.setValue(score.getValue() + i);
     }

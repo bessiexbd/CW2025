@@ -57,7 +57,7 @@
 #lineLabel {
     -fx-font-family: "Let's go Digital";
     -fx-font-size: 38px;
-    -fx-text-fill: yellow;
+    -fx-text-fill: #FFFACD;
 
 }.levelBox {
      -fx-min-width: 60;
@@ -74,7 +74,7 @@
 #levelLabel {
     -fx-font-family: "Let's go Digital";
     -fx-font-size: 38px;
-    -fx-text-fill: yellow;
+    -fx-text-fill: #FFFACD;
 }
 /*hold box*/
 .holdBox {
@@ -85,7 +85,7 @@
     -fx-font-family: "Let's go Digital";
     -fx-padding: 20px 0 0 0;
     -fx-font-size: 16px;
-    -fx-text-fill: yellow;
+    -fx-text-fill: #FF69B4;
 }
 .holdPanelBox {
     -fx-background-color: rgba(255, 255, 255, 0.1);
@@ -97,7 +97,7 @@
     -fx-font-family: "Let's go Digital";
     -fx-padding: 20px 0 0 0;
     -fx-font-size: 16px;
-    -fx-text-fill: yellow;
+    -fx-text-fill: #FF69B4;
 }
 .nextBox{
     -fx-background-color: rgba(255, 255, 255, 0.1);
@@ -106,7 +106,8 @@
     -fx-spacing: 5;
 
 }
-.nextTitle{fx-font-family: "Let's go Digital";
+.nextTitle{
+    -fx-font-family: "Let's go Digital";
     -fx-font-size: 18px;
     -fx-text-fill: white;
     -fx-font-weight: bold;

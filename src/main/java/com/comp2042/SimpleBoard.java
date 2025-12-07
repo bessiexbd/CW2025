@@ -31,6 +31,10 @@ public class SimpleBoard implements Board {
         return currentBrick;
     }
 
+    public Point getCurrentBrickPosition(){
+        return new  Point(currentOffset);
+    }
+
     @Override
     public boolean moveBrickDown() {
         int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);

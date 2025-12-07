@@ -4,16 +4,15 @@ import com.comp2042.logic.bricks.Brick;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-import java.util.logging.Level;
 
 public class GameController implements InputEventListener {
 
-    private Board board = new SimpleBoard(25, 10);
+    private final Board board = new SimpleBoard(25, 10);
 
     private final GuiController viewGuiController;
-    private IntegerProperty lines = new SimpleIntegerProperty(0);
+    private final IntegerProperty lines = new SimpleIntegerProperty(0);
     //    make level an integer property for binding
-    private IntegerProperty level = new SimpleIntegerProperty(1);
+    private final IntegerProperty level = new SimpleIntegerProperty(1);
 
 //hold feature
     private Brick holdBrick = null;
